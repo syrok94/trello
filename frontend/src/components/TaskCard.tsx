@@ -1,26 +1,40 @@
-import { useState } from "react";
-import { FaEllipsisH, FaTrash } from "react-icons/fa";
+import React, { useRef, useState } from "react";
+import { FaEllipsisH } from "react-icons/fa";
 import Select from "./Select";
 
-const TaskCard = ({task , onDelete , onEdit , onMove , onCopy , id}) => {
+interface TaskCardProps{
+  id : string,
+  task : string
+}
 
-    const [selectModal , setSelectModal] = useState(false);
+
+const TaskCard =  ({id ,task} : TaskCardProps) => {
+
+  const [selectModal , setSelectModal] = useState(false);
 
     const handleClick = ()=>{
         setSelectModal((prev)=>!prev);
     }   
 
 
+    const clickedOutsideRef = useRef<React.RefAttributes<HTMLDivElement>>(null);
+
+    const handleRef = (event : React.MouseEvent) => {
+      if(clickedOutsideRef.current && !clickedOutsideRef.current.contains(event.target)){
+        setSelectModal(false);
+      }
+    }
+
+
+    
+
   return (
-    <div className="flex-col w-full bg-white p-2 border border-gray-400 border-solid rounded-xl items-center">
-      <p className="text-sm font-semibold">{task}</p>
-      <div className="flex justify-end pt-2">
-        {/* <div>
-          <FaTrash className="text-sm cursor-pointer" onClick={()=>onDelete(id)} />
-        </div> */}
-        <div className="cursor-pointer ">
+    <div className="flex-col w-full bg-white p-2 border border-gray-400 border-solid rounded-xl items-center"  onClick={handleRef}>
+      <p className="text-sm font-semibold overflow-hidden">{task}</p>
+      <div className="flex justify-end pt-2" >
+        <div className="cursor-pointer "  ref={clickedOutsideRef}>
             <FaEllipsisH onClick={handleClick}/>
-          {selectModal && <Select id={id} onDelete={onDelete} onEdit={onEdit} onCopy={onCopy} onMove={onMove} />}
+          {selectModal && <Select id={id} />}
         </div>
       </div>
     </div>
