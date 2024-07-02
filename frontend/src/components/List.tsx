@@ -14,7 +14,7 @@ const List = ({ name }: ListProps) => {
 
   const [newTaskModal, setNewTaskModal] = useState<boolean>(false);
 
-  const clickedOutsideRef = useRef<React.RefAttributes<HTMLDivElement>>(null);
+  const clickedOutsideRef = useRef<HTMLDivElement>(null);
 
   const handleAddTask = () => {
     setNewTaskModal(true);
@@ -32,16 +32,16 @@ const List = ({ name }: ListProps) => {
     setNewTask("");
   };
 
-  const handleClickOutside = (e: React.MouseEvent) => {
+  const handleClickOutside = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (
       clickedOutsideRef.current &&
-      !clickedOutsideRef.current.contains(e.target)
+      !clickedOutsideRef.current.contains(e.target as Node)
     ) {
       setNewTaskModal(false);
     }
   };
 
-  const handleChangeNewTask = (event: React.ChangeEvent) => {
+  const handleChangeNewTask = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewTask(event.target.value);
   };
 
@@ -53,7 +53,9 @@ const List = ({ name }: ListProps) => {
           data.map((item: { id: string; task: string; category: string }) => {
             return (
               <li className="mb-2" key={item.id}>
-                {name == item.category && <TaskCard id={item.id} task={item.task} />}
+                {name === item.category && (
+                  <TaskCard id={item.id} task={item.task} />
+                )}
               </li>
             );
           })}

@@ -1,25 +1,23 @@
 import { FaTrash, FaCopy, FaEdit, FaArrowRight } from "react-icons/fa";
-import { useContext, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import { DataContext } from "../context/DataContext";
-
+import React from "react";
 
 interface SelectProps {
   id: string;
 }
 
-const Select = ({ id }: SelectProps) => {
+const Select: React.FC<SelectProps> = React.memo(({ id }: SelectProps) => {
   const { data, setData } = useContext(DataContext);
 
   const [editModal, setEditModal] = useState<boolean>(false);
   const [editTask, setEditTask] = useState<string>("");
 
-  const clickedOutsideRef = useRef<React.RefAttributes<HTMLDivElement>>(null);
+  const clickedOutsideRef = useRef<HTMLDivElement>(null);
 
   const handleEditTaskButton = () => {
-
-    for(let i = 0 ; i < data.length ; i++){
-
-      if(data[i].id === id){
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id === id) {
         data[i].task = editTask;
       }
     }
@@ -28,47 +26,51 @@ const Select = ({ id }: SelectProps) => {
     setEditTask("");
   };
 
-  const handleClickOutside = (e: React.MouseEvent) => {
-    if (
-      clickedOutsideRef.current &&
-      !clickedOutsideRef.current.contains(e.target)
-    ) {
-      setEditModal(false);
-    }
-  };
+  const handleClickOutside = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      if (
+        clickedOutsideRef.current &&
+        !clickedOutsideRef.current.contains(e.target as Node)
+      ) {
+        setEditModal(false);
+      }
+    },
+    []
+  );
 
-  const handleEditTask = (event: React.ChangeEvent) => {
-    setEditTask(event.target.value);
-  };
+  const handleEditTask = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setEditTask(event.target.value);
+    },
+    []
+  );
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     console.log("delete");
 
     const newData = data.filter((item: { id: string }) => item.id !== id);
     setData(newData);
-  };
+  }, [data, id, setData]);
 
-  const handleEdit = () => {
-
-    for(let i = 0 ; i < data.length ; i++){
-
-      if(data[i].id === id){
+  const handleEdit = useCallback(() => {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id === id) {
         setEditTask(data[i].task);
       }
     }
-    
+
     setEditModal(true);
-  };
+  }, [data, id]);
 
   const handleMove = () => {};
 
-  const handleCopy = () => {
+  const handleCopy = useCallback(() => {
     for (let i = 0; i < data.length; i++) {
       if (data[i].id === id) {
         navigator.clipboard.writeText(data[i].task);
       }
     }
-  };
+  }, [data, id]);
 
   return (
     <div className="flex flex-col w-24 absolute border rounded-xl bg-white z-50 p-1">
@@ -123,6 +125,6 @@ const Select = ({ id }: SelectProps) => {
       )}
     </div>
   );
-};
+});
 
 export default Select;
