@@ -10,7 +10,7 @@ import {
 interface DataItem {
   id: string;
   task: string;
-  category : string;
+  category: string;
 }
 
 interface DataContextType {
@@ -26,23 +26,7 @@ export const DataContext = createContext<DataContextType | undefined>(
 );
 
 export const DataProvider = ({ children }: DataProviderProps) => {
-  const [data, setData] = useState<DataItem[]>([]);
-
-  // const fetchData = async () => {
-  //   const response = await fetch("https://dummyjson.com/todos?limit=3&skip=10");
-  //   const res = await response.json();
-
-  //   const todos: DataItem[] = res.todos.map((todo: any) => ({
-  //     id: todo.id,
-  //     task: todo.todo,
-  //   }));
-
-  //   setData(todos);
-  // };
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  const [data, setData] = useState<DataItem[]>([])
 
   return (
     <DataContext.Provider value={{ data, setData }}>

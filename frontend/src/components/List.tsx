@@ -24,9 +24,8 @@ const List = ({ name }: ListProps) => {
     const Task = {
       id: uuidv4(),
       task: newTask,
-      category: "todo",
+      category: name,
     };
-
     setData([...data, Task]);
     setNewTaskModal(false);
     setNewTask("");

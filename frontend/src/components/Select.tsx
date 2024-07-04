@@ -2,6 +2,7 @@ import { FaTrash, FaCopy, FaEdit, FaArrowRight } from "react-icons/fa";
 import { useCallback, useContext, useRef, useState } from "react";
 import { DataContext } from "../context/DataContext";
 import React from "react";
+import MoveDropDown from "./MoveDropDown";
 
 interface SelectProps {
   id: string;
@@ -9,6 +10,7 @@ interface SelectProps {
 
 const Select: React.FC<SelectProps> = React.memo(({ id }: SelectProps) => {
   const { data, setData } = useContext(DataContext);
+  const [moveModal, setMoveModal] = useState<boolean>(false);
 
   const [editModal, setEditModal] = useState<boolean>(false);
   const [editTask, setEditTask] = useState<string>("");
@@ -62,7 +64,9 @@ const Select: React.FC<SelectProps> = React.memo(({ id }: SelectProps) => {
     setEditModal(true);
   }, [data, id]);
 
-  const handleMove = () => {};
+  const handleMoveMouseEnter = () => {
+    setMoveModal((prev) => !prev);
+  };
 
   const handleCopy = useCallback(() => {
     for (let i = 0; i < data.length; i++) {
@@ -94,7 +98,7 @@ const Select: React.FC<SelectProps> = React.memo(({ id }: SelectProps) => {
       </div>
       <div
         className="flex flex-row w-full justify-around self-baseline items-center text-sm p-1  hover:bg-slate-200"
-        onClick={handleMove}
+        onMouseEnter={handleMoveMouseEnter}
       >
         <FaArrowRight className="w-4 h-4 " /> <span className="pl-1">Move</span>
       </div>
@@ -123,6 +127,8 @@ const Select: React.FC<SelectProps> = React.memo(({ id }: SelectProps) => {
           </div>
         </div>
       )}
+
+      {moveModal && <MoveDropDown id={id} />}
     </div>
   );
 });
